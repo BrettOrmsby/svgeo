@@ -1,24 +1,26 @@
 import type { BorderlyJSON } from "@/types/borderly";
 import { shuffle } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import "./OptionPicker.css";
 
 interface OptionPickerProps {
 	order: BorderlyJSON["data"];
 	index: number;
-	onAnswered: (wasCorrect: boolean) => void;
+	onAnswered: (value: string) => void;
+	correctAnswerId: string;
 }
 
 export default function OptionPicker({
 	order,
 	index,
 	onAnswered,
+	correctAnswerId,
 }: OptionPickerProps) {
 	// TODO: try to avoid shapes that have already been identified (and just shuffle rest?)
 	const [possibleAnswers, setPossibleAnswers] = useState<
 		BorderlyJSON["data"][number][]
 	>([]);
 	const [hasAnswered, setHasAnswered] = useState(false);
-	const [wasCorrect, setCorrect] = useState(false);
 
 	useEffect(() => {
 		const firstDummy = getDummyAnswerIndex(order.length, [index]);
@@ -27,38 +29,36 @@ export default function OptionPicker({
 
 		setPossibleAnswers(shuffle(threeAnswers));
 		setHasAnswered(false);
-		setCorrect(false);
 	}, [index, order]);
 
 	function chooseAnswer(answer: string) {
-		const isCorrect = answer === order[index].name;
 		setHasAnswered(true);
-		setCorrect(isCorrect);
-		onAnswered(isCorrect);
+		onAnswered(answer);
 	}
 
 	return (
-		<div>
-			{possibleAnswers.map((answer) => (
-				<div key={answer.id}>
-					<div>
-						<strong>{answer.name}</strong>
+		<div className="button-answer-container">
+			{possibleAnswers.map((answer) =>
+				hasAnswered ? (
+					<div
+						key={answer.id}
+						className={
+							correctAnswerId === answer.id ? "card success" : "card error"
+						}
+					>
+						{answer.name}
 					</div>
+				) : (
 					<button
+						key={answer.id}
 						onClick={() => chooseAnswer(answer.name)}
 						disabled={hasAnswered}
 						type="button"
+						className="secondary"
 					>
-						Answer?
+						{answer.name}
 					</button>
-				</div>
-			))}
-			{hasAnswered && (
-				<div>
-					{wasCorrect && "You are correct!"}
-					{!wasCorrect &&
-						"You are incorrect! the answer was " + order[index].name}
-				</div>
+				),
 			)}
 		</div>
 	);

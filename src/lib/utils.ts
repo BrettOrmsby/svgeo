@@ -3,6 +3,5 @@ export function shuffle<T>(arr: T[]): T[] {
 		const j = Math.floor(Math.random() * (i + 1));
 		[arr[i], arr[j]] = [arr[j], arr[i]];
 	}
-	console.log("Shuffled", arr);
 	return arr;
 }

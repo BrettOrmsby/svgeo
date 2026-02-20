@@ -1,10 +1,11 @@
 import type { BorderlyJSON } from "@/types/borderly";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import "./TextPicker.css";
 
 interface TextPickerProps {
 	order: BorderlyJSON["data"];
 	index: number;
-	onAnswered: (wasCorrect: boolean) => void;
+	onAnswered: (value: string) => void;
 }
 
 export default function TextPicker({
@@ -13,50 +14,44 @@ export default function TextPicker({
 	onAnswered,
 }: TextPickerProps) {
 	const [hasAnswered, setHasAnswered] = useState(false);
-	const [wasCorrect, setWasCorrect] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
 	const [value, setValue] = useState("");
 
 	useEffect(() => {
 		setHasAnswered(false);
-		setWasCorrect(false);
 		setValue("");
+		if (inputRef.current) {
+			inputRef.current.disabled = false;
+			inputRef.current?.focus();
+		}
 	}, [index, order]);
 
-	function chooseAnswer() {
-		const wasCorrect =
-			normalizeString(value) === normalizeString(order[index].name);
+	useEffect(() => inputRef.current?.focus(), []);
 
+	function chooseAnswer() {
 		setHasAnswered(true);
-		setWasCorrect(wasCorrect);
-		onAnswered(wasCorrect);
+		onAnswered(value);
 	}
 
 	return (
-		<div>
+		<div className="text-answer-container">
 			<input
+				aria-label="Location"
 				disabled={hasAnswered}
+				placeholder="Enter the location"
 				onKeyDown={(e) => e.key === "Enter" && chooseAnswer()}
 				onChange={(event) => setValue(event.target.value)}
 				value={value}
+				ref={inputRef}
 			/>
-			<button disabled={hasAnswered} onClick={chooseAnswer} type="button">
+			<button
+				className="primary"
+				disabled={hasAnswered}
+				onClick={chooseAnswer}
+				type="button"
+			>
 				Submit
 			</button>
-			{hasAnswered && (
-				<div>
-					{wasCorrect && "You are correct!"}
-					{!wasCorrect &&
-						"You are incorrect! the answer was " + order[index].name}
-				</div>
-			)}
 		</div>
 	);
-}
-
-function normalizeString(str: string): string {
-	return str
-		.trim()
-		.normalize("NFD")
-		.replace(/\p{Diacritic}/gu, "")
-		.toLowerCase();
 }

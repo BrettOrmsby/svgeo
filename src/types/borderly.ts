@@ -1,6 +1,6 @@
 export type Category =
 	| "countries"
-	| "states"
+	| "us-states"
 	| "dmas"
 	| "canada-provinces"
 	| "canada-regions"
@@ -138,7 +138,7 @@ export type BorderlyJSON =
 export function isCategory(str: string): str is Category {
 	return [
 		"countries",
-		"states",
+		"us-states",
 		"dmas",
 		"canada-provinces",
 		"canada-regions",
