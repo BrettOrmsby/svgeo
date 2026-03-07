@@ -6,7 +6,8 @@
 	gap: var(--space-md);
 	flex-wrap: wrap;
 }
-main {
+.game-main {
+	min-height: 85vh;
 	text-align: center;
 }
 

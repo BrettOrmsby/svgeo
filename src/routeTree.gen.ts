@@ -10,17 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PlayIndexRouteImport } from './routes/play/index'
 import { Route as PlayCategoryModeRouteImport } from './routes/play/$category.$mode'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlayIndexRoute = PlayIndexRouteImport.update({
-  id: '/play/',
-  path: '/play/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayCategoryModeRoute = PlayCategoryModeRouteImport.update({
@@ -31,31 +25,27 @@ const PlayCategoryModeRoute = PlayCategoryModeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/play/': typeof PlayIndexRoute
   '/play/$category/$mode': typeof PlayCategoryModeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/play': typeof PlayIndexRoute
   '/play/$category/$mode': typeof PlayCategoryModeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/play/': typeof PlayIndexRoute
   '/play/$category/$mode': typeof PlayCategoryModeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/play/' | '/play/$category/$mode'
+  fullPaths: '/' | '/play/$category/$mode'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/play' | '/play/$category/$mode'
-  id: '__root__' | '/' | '/play/' | '/play/$category/$mode'
+  to: '/' | '/play/$category/$mode'
+  id: '__root__' | '/' | '/play/$category/$mode'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PlayIndexRoute: typeof PlayIndexRoute
   PlayCategoryModeRoute: typeof PlayCategoryModeRoute
 }
 
@@ -66,13 +56,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/play/': {
-      id: '/play/'
-      path: '/play'
-      fullPath: '/play/'
-      preLoaderRoute: typeof PlayIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/play/$category/$mode': {
@@ -87,7 +70,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PlayIndexRoute: PlayIndexRoute,
   PlayCategoryModeRoute: PlayCategoryModeRoute,
 }
 export const routeTree = rootRouteImport

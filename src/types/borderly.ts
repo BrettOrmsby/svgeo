@@ -1,10 +1,10 @@
 export type Category =
 	| "countries"
-	| "us-states"
+	| "states"
 	| "dmas"
 	| "canada-provinces"
-	| "canada-regions"
-	| "india-states";
+	| "india-states"
+	| "india-districts";
 
 export interface Country {
 	id: string;
@@ -90,26 +90,6 @@ export interface CanadaProvinces {
 	data: CanadaProvince[];
 }
 
-export interface CanadaRegion {
-	id: string;
-	name: string;
-	eruid: string;
-	region: string;
-	provinceId: string;
-	urls: {
-		shape: string;
-	};
-}
-export interface CanadaRegions {
-	type: "canada-provinces";
-	count: number;
-	description: string;
-	baseUrls: {
-		shape: string;
-	};
-	data: CanadaRegion[];
-}
-
 export interface IndiaState {
 	id: string;
 	name: string;
@@ -127,21 +107,37 @@ export interface IndiaStates {
 	data: IndiaState[];
 }
 
+export interface IndiaDistrict {
+	id: string;
+	name: string;
+	urls: {
+		shape: string;
+	};
+}
+export interface IndiaDistricts {
+	type: "india-districts";
+	count: number;
+	description: string;
+	baseUrls: {
+		shape: string;
+	};
+	data: IndiaDistrict[];
+}
+
 export type BorderlyJSON =
 	| Countries
 	| USStates
 	| DMAs
 	| CanadaProvinces
-	| CanadaRegions
 	| IndiaStates;
 
 export function isCategory(str: string): str is Category {
 	return [
 		"countries",
-		"us-states",
+		"states",
 		"dmas",
 		"canada-provinces",
-		"canada-regions",
 		"india-states",
+		"india-districts",
 	].includes(str);
 }

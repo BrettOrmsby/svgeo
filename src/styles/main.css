@@ -179,7 +179,8 @@ a.button {
 	}
 }
 
-h1 {
+h1,
+h2 {
 	text-align: center;
 	margin-top: 0;
 }

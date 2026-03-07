@@ -4,7 +4,7 @@ import "./Header.css";
 
 export default function Header() {
 	return (
-		<header>
+		<header className="nav">
 			<div className="wrapper">
 				<Link to="/" className="title-logo">
 					<div className="circle">
@@ -13,10 +13,14 @@ export default function Header() {
 					<span className="title">SVGEO</span>
 				</Link>
 				<div>
-					<Link to="/play" className="button primary">
+					<Link to="/" hash="play" className="button primary">
 						Play
 					</Link>
-					<Link to="/" hash="learn" className="button secondary about-button">
+					<Link
+						to="/"
+						hash="how-to-play"
+						className="button secondary about-button"
+					>
 						About
 					</Link>
 				</div>

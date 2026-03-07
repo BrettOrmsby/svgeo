@@ -4,6 +4,7 @@ import { isMode } from "@/types/intex";
 import { getBorderlyJSON } from "@/lib/borderlyClient";
 import Game from "@/components/Game";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 /*
  * - Easy: have 3-5 options to choose from
@@ -37,9 +38,10 @@ function Play() {
 	return (
 		<>
 			<Header />
-			<main>
+			<main className="game-main">
 				<Game data={borderlyData} mode={mode} />
 			</main>
+			<Footer />
 		</>
 	);
 }
