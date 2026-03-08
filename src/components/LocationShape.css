@@ -7,12 +7,6 @@
 	justify-content: center;
 }
 
-@media (max-width: 350px) {
-	.location-shape {
-		width: 100%;
-	}
-}
-
 .loader {
 	width: 50px;
 	aspect-ratio: 1;

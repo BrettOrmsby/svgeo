@@ -7,6 +7,7 @@ import { routeTree } from "./routeTree.gen";
 import reportWebVitals from "./reportWebVitals.ts";
 
 import "./styles/main.css";
+import NotFound from "./components/NotFound.tsx";
 
 // Create a new router instance
 const router = createRouter({
@@ -16,9 +17,7 @@ const router = createRouter({
 	scrollRestoration: true,
 	defaultStructuralSharing: true,
 	defaultPreloadStaleTime: 0,
-	defaultNotFoundComponent: () => {
-		return <p>404</p>;
-	},
+	defaultNotFoundComponent: NotFound,
 });
 
 // Register the router instance for type safety

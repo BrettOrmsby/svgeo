@@ -1,0 +1,9 @@
+.not-found-main {
+	min-height: 85vh;
+	text-align: center;
+}
+
+.distorted-image {
+	max-width: min(50vh, 50vw);
+	transform: skewX(40deg) skewY(20deg);
+}
