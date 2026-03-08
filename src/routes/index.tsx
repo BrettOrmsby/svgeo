@@ -4,6 +4,7 @@ import "@/styles/index.css";
 import { idToImageId, userFacingCategories } from "@/lib/borderlyClient";
 import type { Category } from "@/types/borderly";
 import { MapPinned } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
 	component: App,
@@ -42,11 +43,15 @@ const categories: CategoryCardData[] = [
 ];
 
 function App() {
-	// TODO: add event listener for dark/ling mode
-	const bodyStyles = getComputedStyle(document.body);
-	const bg = bodyStyles.getPropertyValue("--bg");
-	const border = bodyStyles.getPropertyValue("--border");
-	const cardShapeStyleQuery = `?fill=${bg.replace("#", "")}&stroke=${border.replace("#", "")}&strokeWidth=0.5`;
+	const [shapeStyleQuery, setShapeStyleQuery] = useState(``);
+	useEffect(() => {
+		const updateShapeStyles = () => setShapeStyleQuery(getShapeStyleQuery());
+		updateShapeStyles();
+
+		const colourScheme = window.matchMedia("(prefers-color-scheme: dark)");
+		colourScheme.addEventListener("change", updateShapeStyles);
+		return () => colourScheme.removeEventListener("change", updateShapeStyles);
+	});
 
 	const scrollIntoView = (id: string) =>
 		document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -132,7 +137,7 @@ function App() {
 								className="card game-picker"
 								style={
 									{
-										"--bg-image": `url("https://borderly.dev/${idToImageId[category.id]}/${category.shape}.svg${cardShapeStyleQuery}")`,
+										"--bg-image": `url("https://borderly.dev/${idToImageId[category.id]}/${category.shape}.svg${shapeStyleQuery}")`,
 									} as React.CSSProperties
 								}
 							>
@@ -168,4 +173,11 @@ function App() {
 			<Footer></Footer>
 		</>
 	);
+}
+
+function getShapeStyleQuery() {
+	const bodyStyles = getComputedStyle(document.body);
+	const bg = bodyStyles.getPropertyValue("--bg");
+	const border = bodyStyles.getPropertyValue("--border");
+	return `?fill=${bg.replace("#", "")}&stroke=${border.replace("#", "")}&strokeWidth=0.5`;
 }

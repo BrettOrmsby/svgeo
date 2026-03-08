@@ -1,16 +1,10 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { isCategory } from "@/types/borderly";
 import { isMode } from "@/types/intex";
-import { getBorderlyJSON } from "@/lib/borderlyClient";
+import { getBorderlyJSON, userFacingCategories } from "@/lib/borderlyClient";
 import Game from "@/components/Game";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-/*
- * - Easy: have 3-5 options to choose from
- * - Medium: need to enter the name
- * - Hard: svg is rotated/flipped
- */
 
 export const Route = createFileRoute("/play/$category/$mode")({
 	component: Play,
@@ -28,6 +22,13 @@ export const Route = createFileRoute("/play/$category/$mode")({
 	loader: async ({ params }) => {
 		return await getBorderlyJSON(params.category);
 	},
+	head: ({ params }) => ({
+		meta: [
+			{
+				title: `SVGEO • ${userFacingCategories[params.category]} ${params.mode.charAt(0).toUpperCase() + params.mode.slice(1)}`,
+			},
+		],
+	}),
 	pendingComponent: () => <div>Loading...</div>,
 	errorComponent: ({ error }) => <div>Error: {error.message}</div>,
 });

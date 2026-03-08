@@ -16,16 +16,13 @@ export default function OptionPicker({
 	onAnswered,
 	correctAnswerId,
 }: OptionPickerProps) {
-	// TODO: try to avoid shapes that have already been identified (and just shuffle rest?)
 	const [possibleAnswers, setPossibleAnswers] = useState<
 		BorderlyJSON["data"][number][]
 	>([]);
 	const [hasAnswered, setHasAnswered] = useState(false);
 
 	useEffect(() => {
-		const firstDummy = getDummyAnswerIndex(order.length, [index]);
-		const secondDummy = getDummyAnswerIndex(order.length, [index, firstDummy]);
-		const threeAnswers = [order[index], order[firstDummy], order[secondDummy]];
+		const threeAnswers = [order[index], ...getTwoFakeAnswers(order, index)];
 
 		setPossibleAnswers(shuffle(threeAnswers));
 		setHasAnswered(false);
@@ -64,13 +61,26 @@ export default function OptionPicker({
 	);
 }
 
-function getDummyAnswerIndex(length: number, invalid: number[]): number {
-	while (true) {
-		const dummy = getRandomIndex(length);
-		if (!invalid.includes(dummy)) return dummy;
+function getTwoFakeAnswers(
+	order: BorderlyJSON["data"],
+	index: number,
+): BorderlyJSON["data"] {
+	const unanswered = shuffle(order.slice(index + 1));
+	const twoFakeAnswers = [];
+	if (unanswered.length === 0) {
+		let answered = [...order];
+		answered.pop();
+		answered = shuffle(answered);
+		twoFakeAnswers.push(answered[0]);
+		twoFakeAnswers.push(answered[1]);
+	} else if (unanswered.length === 1) {
+		let answered = [...order];
+		answered = shuffle(answered.filter((_, i) => i !== index));
+		twoFakeAnswers.push(answered[0]);
+		twoFakeAnswers.push(unanswered[0]);
+	} else {
+		twoFakeAnswers.push(unanswered[0]);
+		twoFakeAnswers.push(unanswered[1]);
 	}
-}
-
-function getRandomIndex(length: number) {
-	return Math.floor(Math.random() * length);
+	return twoFakeAnswers;
 }

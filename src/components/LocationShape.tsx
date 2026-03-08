@@ -24,7 +24,7 @@ export default function LocationShape({ mode, src }: LocationShapeProps) {
 	const bg = bodyStyles.getPropertyValue("--button-primary-bg");
 	const border = bodyStyles.getPropertyValue("--button-primary-border");
 	const styleQuery = `?fill=${bg.replace("#", "")}&stroke=${border.replace("#", "")}&strokeWidth=0.5&rotate=${rotation}`;
-	// TODO: button that passes as correct when an image is failed to update
+
 	return (
 		<div className="location-shape">
 			{isLoading && (
