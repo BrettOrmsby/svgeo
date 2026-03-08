@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { isCategory } from "@/types/borderly";
-import { isMode } from "@/types/intex";
-import { getBorderlyJSON, userFacingCategories } from "@/lib/borderlyClient";
+import Footer from "@/components/Footer";
 import Game from "@/components/Game";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { getBorderlyJSON, userFacingCategories } from "@/lib/borderlyClient";
+import { isMode } from "@/types";
+import { isCategory } from "@/types/borderly";
 
 export const Route = createFileRoute("/play/$category/$mode")({
 	component: Play,
@@ -19,13 +19,12 @@ export const Route = createFileRoute("/play/$category/$mode")({
 			};
 		},
 	},
-	loader: async ({ params }) => {
-		return await getBorderlyJSON(params.category);
-	},
+	loader: ({ params }) => getBorderlyJSON(params.category),
+
 	head: ({ params }) => ({
 		meta: [
 			{
-				title: `SVGEO • ${userFacingCategories[params.category]} ${params.mode.charAt(0).toUpperCase() + params.mode.slice(1)}`,
+				title: `SVGEO • ${userFacingCategories[params.category]} ${capitalize(params.mode)}`,
 			},
 		],
 	}),
@@ -45,4 +44,8 @@ function Play() {
 			<Footer />
 		</>
 	);
+}
+
+function capitalize(str: string): string {
+	return str[0].toUpperCase() + str.slice(1);
 }

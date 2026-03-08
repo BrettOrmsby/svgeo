@@ -1,0 +1,29 @@
+.card.game-picker {
+	flex-direction: column;
+	background-image: var(--bg-image);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	border: 1px solid var(--border);
+
+	& h3 {
+		margin: 0;
+		margin-bottom: var(--space-md);
+	}
+
+	& .links {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: var(--space-sm);
+	}
+}
+
+.game-modes {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-md);
+	flex-wrap: wrap;
+}

@@ -1,10 +1,16 @@
-export type Category =
-	| "countries"
-	| "states"
-	| "dmas"
-	| "canada-provinces"
-	| "india-states"
-	| "india-districts";
+export const CATEGORIES = [
+	"countries",
+	"states",
+	"dmas",
+	"canada-provinces",
+	"india-states",
+	"india-districts",
+] as const;
+export type Category = (typeof CATEGORIES)[number];
+
+export function isCategory(str: string): str is Category {
+	return CATEGORIES.includes(str as Category);
+}
 
 export interface Country {
 	id: string;
@@ -41,7 +47,7 @@ export interface USState {
 	};
 }
 export interface USStates {
-	type: "us-states";
+	type: "states";
 	count: number;
 	description: string;
 	baseUrls: {
@@ -129,15 +135,5 @@ export type BorderlyJSON =
 	| USStates
 	| DMAs
 	| CanadaProvinces
-	| IndiaStates;
-
-export function isCategory(str: string): str is Category {
-	return [
-		"countries",
-		"states",
-		"dmas",
-		"canada-provinces",
-		"india-states",
-		"india-districts",
-	].includes(str);
-}
+	| IndiaStates
+	| IndiaDistricts;

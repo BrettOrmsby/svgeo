@@ -1,5 +1,5 @@
-import type { GameMode } from "@/types/intex";
 import { useEffect, useState } from "react";
+import type { GameMode } from "@/types";
 import "./LocationShape.css";
 
 interface LocationShapeProps {
@@ -25,29 +25,25 @@ export default function LocationShape({ mode, src }: LocationShapeProps) {
 	const border = bodyStyles.getPropertyValue("--button-primary-border");
 	const styleQuery = `?fill=${bg.replace("#", "")}&stroke=${border.replace("#", "")}&strokeWidth=0.5&rotate=${rotation}`;
 
+	if (isError)
+		return (
+			<div className="location-shape">
+				<div>Failed to Load Image</div>
+			</div>
+		);
 	return (
 		<div className="location-shape">
-			{isLoading && (
-				<div
-					className="loader"
-					style={{
-						display: isLoading ? "grid" : "none",
-					}}
-				></div>
-			)}
-			{isError && <div>Failed to Load Image</div>}
-			{!isError && (
-				<img
-					src={src + styleQuery}
-					alt="Location Shape"
-					style={{ display: isLoading ? "none" : "inline-block" }}
-					onLoad={() => setIsLoading(false)}
-					onError={() => {
-						setIsError(true);
-						setIsLoading(false);
-					}}
-				/>
-			)}
+			{isLoading && <div className="loader"></div>}
+			<img
+				src={src + styleQuery}
+				alt="Location Shape"
+				style={{ display: isLoading ? "none" : "inline-block" }}
+				onLoad={() => setIsLoading(false)}
+				onError={() => {
+					setIsError(true);
+					setIsLoading(false);
+				}}
+			/>
 		</div>
 	);
 }

@@ -5,10 +5,10 @@ import "./Header.css";
 export default function Header() {
 	return (
 		<header className="nav">
-			<div className="wrapper">
+			<nav className="wrapper">
 				<Link to="/" className="title-logo">
 					<div className="circle">
-						<MapPinned />
+						<MapPinned aria-label="SVGEO Home" />
 					</div>
 					<span className="title">SVGEO</span>
 				</Link>
@@ -24,7 +24,7 @@ export default function Header() {
 						About
 					</Link>
 				</div>
-			</div>
+			</nav>
 		</header>
 	);
 }

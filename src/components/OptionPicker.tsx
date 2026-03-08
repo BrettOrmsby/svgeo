@@ -1,6 +1,6 @@
-import type { BorderlyJSON } from "@/types/borderly";
-import { shuffle } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { shuffle } from "@/lib/utils";
+import type { BorderlyJSON } from "@/types/borderly";
 import "./OptionPicker.css";
 
 interface OptionPickerProps {
@@ -24,11 +24,12 @@ export default function OptionPicker({
 	useEffect(() => {
 		const threeAnswers = [order[index], ...getTwoFakeAnswers(order, index)];
 
-		setPossibleAnswers(shuffle(threeAnswers));
 		setHasAnswered(false);
+		setPossibleAnswers(shuffle(threeAnswers));
 	}, [index, order]);
 
 	function chooseAnswer(answer: string) {
+		if (hasAnswered) return;
 		setHasAnswered(true);
 		onAnswered(answer);
 	}

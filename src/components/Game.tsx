@@ -1,11 +1,11 @@
-import type { BorderlyJSON } from "@/types/borderly";
-import type { GameMode } from "@/types/intex";
-import LocationShape from "./LocationShape";
 import { useEffect, useState } from "react";
-import TextPicker from "./TextPicker";
-import OptionPicker from "./OptionPicker";
-import { shuffle } from "@/lib/utils";
 import { userFacingCategories } from "@/lib/borderlyClient";
+import { shuffle } from "@/lib/utils";
+import type { GameMode } from "@/types";
+import type { BorderlyJSON } from "@/types/borderly";
+import LocationShape from "./LocationShape";
+import OptionPicker from "./OptionPicker";
+import TextPicker from "./TextPicker";
 import "./Game.css";
 interface GameProps {
 	mode: GameMode;
@@ -27,9 +27,11 @@ export default function Game({ mode, data }: GameProps) {
 		setIsCorrect(false);
 	};
 
-	useEffect(reset, [data]);
+	useEffect(() => reset(), [data]);
 
 	const onAnswered = (value: string) => {
+		if (isAnswered) return;
+
 		const wasCorrect =
 			normalizeString(value) === normalizeString(order[currentIndex].name);
 		if (wasCorrect) setCorrectAnswers((prev) => prev + 1);
@@ -43,49 +45,18 @@ export default function Game({ mode, data }: GameProps) {
 	};
 
 	const Picker = mode === "easy" ? OptionPicker : TextPicker;
-
-	const AnswerPicker = currentIndex < data.data.length && (
-		<>
-			<LocationShape
-				mode={mode}
-				src={data.baseUrls.shape.replace("{id}", order[currentIndex].id)}
-			/>
-			<Picker
-				order={order}
-				index={currentIndex}
-				onAnswered={onAnswered}
-				correctAnswerId={order[currentIndex].id}
-			/>
-			{isAnswered && (
-				<div className="answer-area">
-					{isCorrect ? (
-						<div className="card success">You are correct!</div>
-					) : (
-						<div className="card error">
-							You are incorrect! The answer was{" "}
-							<strong>{order[currentIndex].name}</strong>.
-						</div>
-					)}
-					<button type="button" className="secondary" onClick={onNext}>
-						Next
-					</button>
-				</div>
-			)}
-		</>
-	);
-
-	const capitalMode = mode.charAt(0).toUpperCase() + mode.slice(1);
+	const completed = isAnswered ? currentIndex + 1 : currentIndex;
 
 	return (
 		<section className="Game">
 			<h1>
-				{userFacingCategories[data.type]}: {capitalMode}
+				{userFacingCategories[data.type]}: {capitalize(mode)}
 			</h1>
 			<div className="completed-stats">
 				<div className="card">
 					Completed:&nbsp;
 					<strong>
-						{isAnswered ? currentIndex + 1 : currentIndex} / {order.length}
+						{completed} / {order.length}
 					</strong>
 				</div>
 				<div className="card success">
@@ -95,7 +66,7 @@ export default function Game({ mode, data }: GameProps) {
 					</strong>
 				</div>
 			</div>
-			{currentIndex >= data.data.length ? (
+			{currentIndex >= order.length ? (
 				<div className="finished-container">
 					<h2>Congratulations!</h2>
 					<p>You've completed them all!</p>
@@ -104,7 +75,35 @@ export default function Game({ mode, data }: GameProps) {
 					</button>
 				</div>
 			) : (
-				AnswerPicker
+				currentIndex < data.data.length && (
+					<>
+						<LocationShape
+							mode={mode}
+							src={data.baseUrls.shape.replace("{id}", order[currentIndex].id)}
+						/>
+						<Picker
+							order={order}
+							index={currentIndex}
+							onAnswered={onAnswered}
+							correctAnswerId={order[currentIndex].id}
+						/>
+						{isAnswered && (
+							<div className="answer-area">
+								{isCorrect ? (
+									<div className="card success">You are correct!</div>
+								) : (
+									<div className="card error">
+										You are incorrect! The answer was{" "}
+										<strong>{order[currentIndex].name}</strong>.
+									</div>
+								)}
+								<button type="button" className="secondary" onClick={onNext}>
+									Next
+								</button>
+							</div>
+						)}
+					</>
+				)
 			)}
 		</section>
 	);
@@ -116,4 +115,8 @@ function normalizeString(str: string): string {
 		.normalize("NFD")
 		.replace(/\p{Diacritic}/gu, "")
 		.toLowerCase();
+}
+
+function capitalize(str: string): string {
+	return str[0].toUpperCase() + str.slice(1);
 }

@@ -1,5 +1,5 @@
-import type { BorderlyJSON } from "@/types/borderly";
 import { useEffect, useRef, useState } from "react";
+import type { BorderlyJSON } from "@/types/borderly";
 import "./TextPicker.css";
 
 interface TextPickerProps {
@@ -26,9 +26,8 @@ export default function TextPicker({
 		}
 	}, [index, order]);
 
-	useEffect(() => inputRef.current?.focus(), []);
-
 	function chooseAnswer() {
+		if (!value.trim()) return;
 		setHasAnswered(true);
 		onAnswered(value);
 	}
@@ -36,7 +35,7 @@ export default function TextPicker({
 	return (
 		<div className="text-answer-container">
 			<input
-				aria-label="Location"
+				aria-label="Enter location answer"
 				disabled={hasAnswered}
 				placeholder="Enter the location"
 				onKeyDown={(e) => e.key === "Enter" && chooseAnswer()}

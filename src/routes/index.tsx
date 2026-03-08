@@ -1,61 +1,47 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import Footer from "@/components/Footer";
 import "@/styles/index.css";
-import { idToImageId, userFacingCategories } from "@/lib/borderlyClient";
-import type { Category } from "@/types/borderly";
 import { MapPinned } from "lucide-react";
-import { useEffect, useState } from "react";
+import CategoryCard from "@/components/CategoryCard";
+import type { Category } from "@/types/borderly";
 
 export const Route = createFileRoute("/")({
 	component: App,
 });
 
 interface CategoryCardData {
-	id: Category;
-	shape: string;
+	category: Category;
+	shapeId: string;
 }
 
 const categories: CategoryCardData[] = [
 	{
-		id: "countries",
-		shape: "ca",
+		category: "countries",
+		shapeId: "ca",
 	},
 	{
-		id: "canada-provinces",
-		shape: "on",
+		category: "canada-provinces",
+		shapeId: "on",
 	},
 	{
-		id: "states",
-		shape: "ca",
+		category: "states",
+		shapeId: "ca",
 	},
 	{
-		id: "india-states",
-		shape: "up",
+		category: "india-states",
+		shapeId: "up",
 	},
 	{
-		id: "dmas",
-		shape: "803",
+		category: "dmas",
+		shapeId: "803",
 	},
 	{
-		id: "india-districts",
-		shape: "350",
+		category: "india-districts",
+		shapeId: "350",
 	},
 ];
 
 function App() {
-	const [shapeStyleQuery, setShapeStyleQuery] = useState(``);
-	useEffect(() => {
-		const updateShapeStyles = () => setShapeStyleQuery(getShapeStyleQuery());
-		updateShapeStyles();
-
-		const colourScheme = window.matchMedia("(prefers-color-scheme: dark)");
-		colourScheme.addEventListener("change", updateShapeStyles);
-		return () => colourScheme.removeEventListener("change", updateShapeStyles);
-	});
-
-	const scrollIntoView = (id: string) =>
-		document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-
 	return (
 		<>
 			<header className="hero">
@@ -132,52 +118,16 @@ function App() {
 
 					<div className="game-modes">
 						{categories.map((category) => (
-							<div
-								key={category.id}
-								className="card game-picker"
-								style={
-									{
-										"--bg-image": `url("https://borderly.dev/${idToImageId[category.id]}/${category.shape}.svg${shapeStyleQuery}")`,
-									} as React.CSSProperties
-								}
-							>
-								<h3>{userFacingCategories[category.id]}</h3>
-								<div className="links">
-									<Link
-										to="/play/$category/$mode"
-										params={{ mode: "easy", category: category.id }}
-										className="button primary"
-									>
-										Easy
-									</Link>
-									<Link
-										to="/play/$category/$mode"
-										params={{ mode: "medium", category: category.id }}
-										className="button primary"
-									>
-										Medium
-									</Link>
-									<Link
-										to="/play/$category/$mode"
-										params={{ mode: "hard", category: category.id }}
-										className="button primary"
-									>
-										Hard
-									</Link>
-								</div>
-							</div>
+							<CategoryCard {...category} key={category.category} />
 						))}
 					</div>
 				</section>
 			</main>
-			<Footer></Footer>
+			<Footer />
 		</>
 	);
 }
 
-function getShapeStyleQuery() {
-	const bodyStyles = getComputedStyle(document.body);
-	const bg = bodyStyles.getPropertyValue("--bg");
-	const border = bodyStyles.getPropertyValue("--border");
-	return `?fill=${bg.replace("#", "")}&stroke=${border.replace("#", "")}&strokeWidth=0.5`;
+function scrollIntoView(id: string) {
+	document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
